@@ -1,0 +1,12 @@
+
+# Module functioncall
+
+functioncall brings 2 Functions to allow you dynamically cal oher functions and pass in paramemters.
+
+# Function CallFunction:Void(function_obj:Object, function_name:String, params:String[]=[])
+
+Calls Function "function_name" in Class instance function_obj. Use params to pass in an array off Field names from the same instance.
+
+# Function CallFunction:Void(function_obj:Object, function_name:String, field_obj:Object, params:String[]=[])
+
+Calls Function "function_name" in Class instance function_obj. Use params to pass in an array off Field names from the field_obj instance.
