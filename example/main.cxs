@@ -1,0 +1,54 @@
+Strict
+Import mojo2
+Import functioncall
+
+Import reflection
+' REFLECTION FILTER
+' include this "main" as myClass is in file main 
+' also include mojo2.graphics because we are utilising a Canvas type in file mojo2.graphics
+#REFLECTION_FILTER+="main;mojo2.graphics"
+
+Class test
+	Function draw:Void(cnvs:Canvas)
+		cnvs.DrawOval(200,200,100,100)
+	End
+End
+
+Class myClass Extends App
+    Field c:Canvas
+		Field t:test
+		     
+		Function draw:Void(cnvs:Canvas)
+			cnvs.DrawRect(100,100,300,100)
+		End
+
+    Method OnCreate:Int()
+        SetUpdateRate(60)              
+        c = New Canvas
+        t = New test
+        Return 0
+    End
+   
+    Method OnUpdate:Int()
+      Return 0
+    End
+   
+    Method OnRender:Int()
+    	c.Clear(0,0,0)
+    	
+      If MouseDown(MOUSE_LEFT) Then CallFunction(Self,"draw",["c"])
+      If MouseDown(MOUSE_RIGHT) Then CallFunction(t,"draw",Self,["c"])
+      
+			c.Flush()
+      Return 0
+    End
+ 
+End
+
+
+Function Main:Int()
+    ' Create an instance of your class that you have defined above.
+    New myClass      
+    Return 0
+End
+

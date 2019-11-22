@@ -1,0 +1,43 @@
+Strict
+
+' import default reflection requirements, including defaualt mojo.app
+Import reflection
+#REFLECTION_FILTER+="mojo.app"
+
+' help to pass vars from the same function_class
+Function CallFunction:Void(function_obj:Object,function_name:String,params:String[]=[])
+	CallFunction(function_obj,function_name,function_obj,params)
+End
+
+Function CallFunction:Void(function_obj:Object,function_name:String,field_obj:Object,params:String[]=[])
+	Local func_class:ClassInfo = GetClass(function_obj)
+#If CONFIG="debug"
+	If func_class=Null Then Error("Unable to find Function class. Have you included file of class in #REFLECTION_FILTER")
+#End
+	Local funcs:FunctionInfo[] = func_class.GetFunctions(True)
+
+	Local i:Int=0
+	While i<funcs.Length()
+		If funcs[i].Name=function_name
+			Local field_class:ClassInfo = GetClass(field_obj)
+	#If CONFIG="debug"
+			If field_class=Null Then Error("Unable to find Field class. Have you included file of class in #REFLECTION_FILTER")
+	#End
+			Local args:Object[params.Length()]
+			Local j:Int=0
+			While j<params.Length()
+				args[j] = field_class.GetField(params[j],True).GetValue(field_obj)
+				j+=1
+			Wend
+
+			' not sure whow to return values yet
+			Local result:Object = funcs[i].Invoke(args)
+
+			i=funcs.Length()+1
+		End
+		i+=1
+	Wend
+	#If CONFIG="debug"
+		If i=funcs.Length() Then Error("Unable to find Function: "+function_name)
+	#End
+End
